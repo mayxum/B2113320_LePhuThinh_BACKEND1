@@ -3,6 +3,8 @@ const cors = require("cors");
 
 const contactsRouter = require("./app/routes/contact.routes");
 
+const ApiError = require("./app/api-error");
+
 const app = express();
 
 app.use(cors());
@@ -11,6 +13,16 @@ app.use("/api/contacts", contactsRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to contact book application." });
+});
+
+app.use((req, res, next) => {
+  return next(new ApiError(404, "Resources not found"));
+});
+
+app.use((req, res, next) => {
+  return res.status(error.stausCode || 500).json({
+    message: error.message || "Internal Server Error",
+  });
 });
 
 module.exports = app;
